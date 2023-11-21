@@ -39,9 +39,8 @@ dev = [
     "numpy", # Used in sample notebook intro_notebook.ipynb
 ]
 
-[metadata]
-long_description = { file = "README.md" }
-url = "https://github.com/AutoResearch/autora-doc"
+[project.urls]
+Homepage = "https://github.com/AutoResearch/autora-doc"
 
 [build-system]
 requires = [
