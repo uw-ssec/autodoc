@@ -16,7 +16,11 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-    "ipykernel", # Support for Jupyter notebooks
+    "transformers>=4.35.2",
+    "typer",
+    "scipy",
+    # This works, while installing from pytorch and cuda from conda does not",
+    "torch==2.0.1",
 ]
 
 # On a mac, install optional dependencies with `pip install '.[dev]'` (include the single quotes)
@@ -44,12 +48,7 @@ train = [
     "mlflow",
     "azureml-mlflow",
     "azureml-core",
-    "typer",
     "jsonlines",
-    "transformers>=4.35.2",
-    "scipy",
-    # This works, while installing from pytorch and cuda from conda does not",
-    "torch==2.0.1",
 ]
 
 train_cuda = [
@@ -92,3 +91,9 @@ version-file = "src/autora/doc/_version.py"
 
 [tool.hatch.version.raw-options]
 local_scheme = "no-local-version"
+
+[tool.hatch.build.targets.sdist]
+include = ["src/autora"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/autora"]
