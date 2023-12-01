@@ -19,6 +19,7 @@ dependencies = [
 ]
 
 # On a mac, install optional dependencies with `pip install '.[dev]'` (include the single quotes)
+description = "Automatic documentation generator from AutoRA code"
 [project.optional-dependencies]
 dev = [
     "pytest",
@@ -43,11 +44,8 @@ dev = [
 Homepage = "https://github.com/AutoResearch/autodoc"
 
 [build-system]
-requires = [
-    "setuptools>=62", # Used to build and package the Python project
-    "setuptools_scm>=6.2", # Gets release version from git. Makes it available programmatically
-]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
 [tool.setuptools_scm]
 write_to = "src/autora_doc/_version.py"
@@ -70,3 +68,15 @@ autora_doc = ["py.typed"]
 
 [tool.coverage.run]
 omit=["src/autora_doc/_version.py"]
+
+[tool.hatch]
+
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/autora_doc/_version.py"
+
+[tool.hatch.version.raw-options]
+local_scheme = "no-local-version"
