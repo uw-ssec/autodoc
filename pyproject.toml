@@ -5,6 +5,7 @@ readme = "README.md"
 authors = [
     { name = "Carlos Garcia Jurado Suarez", email = "carlosg@uw.edu" }
 ]
+requires-python = ">=3.8"
 classifiers = [
     "Development Status :: 4 - Beta",
     "License :: OSI Approved :: MIT License",
@@ -39,6 +40,23 @@ dev = [
     "matplotlib", # Used in sample notebook intro_notebook.ipynb
     "numpy", # Used in sample notebook intro_notebook.ipynb
 ]
+train = [
+    "mlflow",
+    "azureml-mlflow",
+    "azureml-core",
+    "typer",
+    "jsonlines",
+    "transformers>=4.35.2",
+    "scipy",
+    # This works, while installing from pytorch and cuda from conda does not",
+    "torch==2.0.1",
+]
+
+train_cuda = [
+    "bitsandbytes>=0.41.2.post2",
+    "accelerate>=0.24.1",
+    "xformers",
+]
 
 [project.urls]
 Homepage = "https://github.com/AutoResearch/autodoc"
@@ -46,9 +64,6 @@ Homepage = "https://github.com/AutoResearch/autodoc"
 [build-system]
 requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
-
-[tool.setuptools_scm]
-write_to = "src/autora_doc/_version.py"
 
 [tool.pytest.ini_options]
 testpaths = [
@@ -63,11 +78,8 @@ target-version = ["py38"]
 profile = "black"
 line_length = 110
 
-[tool.setuptools.package-data]
-autora_doc = ["py.typed"]
-
 [tool.coverage.run]
-omit=["src/autora_doc/_version.py"]
+omit=["src/autora/doc/_version.py"]
 
 [tool.hatch]
 
@@ -76,7 +88,7 @@ omit=["src/autora_doc/_version.py"]
 source = "vcs"
 
 [tool.hatch.build.hooks.vcs]
-version-file = "src/autora_doc/_version.py"
+version-file = "src/autora/doc/_version.py"
 
 [tool.hatch.version.raw-options]
 local_scheme = "no-local-version"

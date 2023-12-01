@@ -1,0 +1,18 @@
+channels:
+  - defaults
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+    - mlflow
+    - azureml-mlflow
+    - azureml-core
+    - typer
+    - jsonlines
+    - accelerate>=0.24.1
+    - bitsandbytes>=0.41.2.post2
+    - transformers>=4.35.2
+    - xformers
+    - scipy
+    # This works, while installing from pytorch and cuda from conda does not
+    - torch==2.0.1    

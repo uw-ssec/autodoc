@@ -8,23 +8,18 @@
 [![Read the Docs](https://img.shields.io/readthedocs/autora-doc)](https://autora-doc.readthedocs.io/)
 
 This project was automatically generated using the LINCC-Frameworks 
-[python-project-template](https://github.com/lincc-frameworks/python-project-template).
-
-A repository badge was added to show that this project uses the python-project-template, however it's up to
-you whether or not you'd like to display it!
-
-For more information about the project template see the 
+[python-project-template](https://github.com/lincc-frameworks/python-project-template). For more information about the project template see the 
 [documentation](https://lincc-ppt.readthedocs.io/en/latest/).
 
 ## Dev Guide - Getting Started
 
 Before installing any dependencies or writing code, it's a great idea to create a
-virtual environment. LINCC-Frameworks engineers primarily use `conda` to manage virtual
+virtual environment. We recommend using `conda` to manage virtual
 environments. If you have conda installed locally, you can run the following to
 create and activate a new environment.
 
 ```
->> conda create env -n <env_name> python=3.10
+>> conda create env -n <env_name> python=3.8
 >> conda activate <env_name>
 ```
 
@@ -47,3 +42,44 @@ Notes:
    into documentation for ReadTheDocs works as expected. For more information, see
    the Python Project Template documentation on
    [Sphinx and Python Notebooks](https://lincc-ppt.readthedocs.io/en/latest/practices/sphinx.html#python-notebooks)
+
+
+## Running AzureML pipelines 
+
+This repo contains the evaluation and training pipelines for AutoDoc.
+
+### Prerequisites
+
+[Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
+
+Add the ML extension:
+```
+az extension add --name ml
+```
+
+Configure the CLI:
+
+```
+az login
+az account set --subscription "<your subscription name>"
+az configure --defaults workspace=<aml workspace> group=<resource group> location=<location, e.g. westus3>
+```
+
+### Uploading data
+
+Example:
+```sh
+az storage blob upload  --account-name <account> --container <container>> --file data/data.jsonl -n data/sweetpea/data.jsonl
+```
+
+### Running jobs
+
+Prediction
+```sh
+az ml job create -f azureml/predict.yml  --set display_name="Test prediction job" --web
+```
+
+Notes:
+- `--name` will set the mlflow run id
+- `--display_name` becomes the name in the experiment dashboard
+- `--web` argument will pop-up a browser window for tracking the job.

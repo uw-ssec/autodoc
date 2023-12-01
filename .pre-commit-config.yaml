@@ -79,12 +79,6 @@ repos:
         language: system
         types: [python]
         files: ^(src|tests)/
-        args:
-          [
-          
-            "--strict", # Use mypy strict mode to enforce type hints
-          
-          ]
 
 
     # Run unit tests, verify that they pass. Note that coverage is run against
