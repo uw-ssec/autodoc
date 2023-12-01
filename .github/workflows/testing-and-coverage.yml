@@ -18,18 +18,10 @@ jobs:
         python-version: ['3.8', '3.9', '3.10']
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+    - name: Setup Dependencies
+      uses: ./.github/actions/deps
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        python -m pip install --upgrade pip
-        pip install .
-        pip install .[dev, train]
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run unit tests with pytest
       run: |
         python -m pytest tests --cov=autora_doc --cov-report=xml

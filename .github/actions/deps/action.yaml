@@ -1,0 +1,21 @@
+name: Setup
+description: Setup Dependencies for testing
+inputs:
+  python-version:
+    required: true
+    description: Python version to install
+runs:
+  using: composite
+  steps:
+    - name: Setup Python
+      uses: actions/setup-python@v4.5.0
+      with:
+        python-version: ${{inputs.python-version}}
+    - name: Setup pip
+      shell: sh
+      run: |        
+        python3 -m ensurepip
+        python3 -m pip install --upgrade pip
+    - name: Install project 
+      shell: sh
+      run: pip install ".[dev,train]"
