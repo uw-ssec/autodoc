@@ -1,10 +1,10 @@
-# autora-doc
+# AutoDoc
 
 [![Template](https://img.shields.io/badge/Template-LINCC%20Frameworks%20Python%20Project%20Template-brightgreen)](https://lincc-ppt.readthedocs.io/en/latest/)
 
 [![PyPI](https://img.shields.io/pypi/v/autora-doc?color=blue&logo=pypi&logoColor=white)](https://pypi.org/project/autora-doc/)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/AutoResearch/autora-doc/smoke-test.yml)](https://github.com/AutoResearch/autora-doc/actions/workflows/smoke-test.yml)
-[![codecov](https://codecov.io/gh/AutoResearch/autora-doc/branch/main/graph/badge.svg)](https://codecov.io/gh/AutoResearch/autora-doc)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/AutoResearch/autodoc/smoke-test.yml)](https://github.com/AutoResearch/autodoc/actions/workflows/smoke-test.yml)
+[![codecov](https://codecov.io/gh/AutoResearch/autodoc/branch/main/graph/badge.svg)](https://codecov.io/gh/AutoResearch/autodoc)
 [![Read the Docs](https://img.shields.io/readthedocs/autora-doc)](https://autora-doc.readthedocs.io/)
 
 This project was automatically generated using the LINCC-Frameworks 

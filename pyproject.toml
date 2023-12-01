@@ -40,7 +40,7 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/AutoResearch/autora-doc"
+Homepage = "https://github.com/AutoResearch/autodoc"
 
 [build-system]
 requires = [
