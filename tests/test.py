@@ -1,4 +1,4 @@
-from autora_doc import example_module
+from autora.doc import example_module
 
 
 def test_greetings() -> None:

@@ -19,19 +19,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+    - name: Setup Dependencies
+      uses: ./.github/actions/deps
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        python -m pip install --upgrade pip
-        pip install .
-        pip install .[dev]
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run unit tests with pytest
       run: |
-        python -m pytest tests --cov=autora_doc --cov-report=xml
+        python -m pytest tests/* --cov=autora --cov-report=xml
     - name: Upload coverage report to codecov
       uses: codecov/codecov-action@v3

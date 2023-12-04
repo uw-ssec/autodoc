@@ -1,0 +1,7 @@
+[flake8]
+max-line-length = 120
+output-file = flake8_log.txt
+tee = True
+extend-ignore= E203, BLK100
+#BLK100 designates where Black would make changes
+#E203 Whitespace rule relating to ':' that directly conflicts with black standards
