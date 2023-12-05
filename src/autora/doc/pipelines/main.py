@@ -1,5 +1,6 @@
 import logging
 from timeit import default_timer as timer
+from typing import List
 
 import jsonlines
 import mlflow
@@ -18,7 +19,9 @@ logger = logging.getLogger(__name__)
 
 
 @app.command()
-def predict(data_file: str, model_path: str, sys_id: SystemPrompts, instruc_id: InstructionPrompts) -> None:
+def predict(
+    data_file: str, model_path: str, sys_id: SystemPrompts, instruc_id: InstructionPrompts
+) -> List[str]:
     run = mlflow.active_run()
 
     sys_prompt = SYS[sys_id]
@@ -51,6 +54,7 @@ def predict(data_file: str, model_path: str, sys_id: SystemPrompts, instruc_id: 
         total_tokens = sum([len(token) for token in tokens])
         mlflow.log_metric("total_tokens", total_tokens)
         mlflow.log_metric("tokens/sec", total_tokens / pred_time)
+        return predictions
 
 
 @app.command()

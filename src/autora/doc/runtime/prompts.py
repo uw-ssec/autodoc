@@ -29,7 +29,6 @@ class SystemPrompts(Enum):
 
 
 class InstructionPrompts(Enum):
-    SYS_1 = "SYS_1"
     INSTR_SWEETP_1 = "INSTR_SWEETP_1"
 
 
