@@ -7,6 +7,7 @@ import torch
 import typer
 
 from autora.doc.runtime.predict_hf import Predictor
+from autora.doc.runtime.prompts import INSTR, SYS, InstructionPrompts, SystemPrompts
 
 app = typer.Typer()
 logging.basicConfig(
@@ -15,21 +16,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# TODO: organize the system and instruction prompts into a separate module
-SYS = """You are a technical documentation writer. You always write clear, concise, and accurate documentation for
- scientific experiments. Your documentation focuses on the experiment's purpose, procedure, and results. Therefore,
- details about specific python functions, packages, or libraries are not necessary. Your readers are experimental
- scientists.
-"""
-
-instr = """Please generate high-level two paragraph documentation for the following experiment. The first paragraph
- should explain the purpose and the second one the procedure, but don't use the word 'Paragraph'"""
-
 
 @app.command()
-def predict(data_file: str, model_path: str) -> None:
+def predict(data_file: str, model_path: str, sys_id: SystemPrompts, instruc_id: InstructionPrompts) -> None:
     run = mlflow.active_run()
 
+    sys_prompt = SYS[sys_id]
+    instr_prompt = INSTR[instruc_id]
     if run is None:
         run = mlflow.start_run()
     with run:
@@ -45,7 +38,7 @@ def predict(data_file: str, model_path: str) -> None:
 
         pred = Predictor(model_path)
         timer_start = timer()
-        predictions = pred.predict(SYS, instr, inputs)
+        predictions = pred.predict(sys_prompt, instr_prompt, inputs)
         timer_end = timer()
         pred_time = timer_end - timer_start
         mlflow.log_metric("prediction_time/doc", pred_time / (len(inputs)))

@@ -98,3 +98,6 @@ include = ["src/autora"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/autora"]
+
+[project.scripts]
+autodoc = "autora.doc.pipelines.main:app"
