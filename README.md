@@ -3,7 +3,9 @@
 [![Template](https://img.shields.io/badge/Template-LINCC%20Frameworks%20Python%20Project%20Template-brightgreen)](https://lincc-ppt.readthedocs.io/en/latest/)
 
 [![PyPI](https://img.shields.io/pypi/v/autora-doc?color=blue&logo=pypi&logoColor=white)](https://pypi.org/project/autora-doc/)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/AutoResearch/autodoc/smoke-test.yml)](https://github.com/AutoResearch/autodoc/actions/workflows/smoke-test.yml)
+
+
+[![GitHub Workflow Status](https://github.com/autoresearch/autodoc/actions/workflows/smoke-test.yml/badge.svg)](https://github.com/AutoResearch/autodoc/actions/workflows/smoke-test.yml)
 [![codecov](https://codecov.io/gh/AutoResearch/autodoc/branch/main/graph/badge.svg)](https://codecov.io/gh/AutoResearch/autodoc)
 [![Read the Docs](https://img.shields.io/readthedocs/autora-doc)](https://autora-doc.readthedocs.io/)
 
@@ -76,7 +78,7 @@ az storage blob upload  --account-name <account> --container <container>> --file
 
 Prediction
 ```sh
-az ml job create -f azureml/predict.yml  --set display_name="Test prediction job" --web
+az ml job create -f azureml/eval.yml  --set display_name="Test prediction job" --web
 ```
 
 Notes:

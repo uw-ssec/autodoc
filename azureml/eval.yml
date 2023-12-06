@@ -1,5 +1,10 @@
 $schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
-command: python -m autora.doc.pipelines.main predict ${{inputs.data_dir}}/data.jsonl ${{inputs.model_dir}}/llama-2-7b-chat-hf
+command: >
+  python -m autora.doc.pipelines.main eval 
+  ${{inputs.data_dir}}/data.jsonl
+  ${{inputs.model_dir}}/llama-2-7b-chat-hf
+  SYS_1
+  INSTR_SWEETP_1
 code: ../src
 inputs:
   data_dir:

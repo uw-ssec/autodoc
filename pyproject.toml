@@ -16,11 +16,11 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-    "transformers>=4.35.2",
     "typer",
     "scipy",
     # This works, while installing from pytorch and cuda from conda does not",
     "torch==2.0.1",
+    "transformers>=4.35.2",
 ]
 
 # On a mac, install optional dependencies with `pip install '.[dev]'` (include the single quotes)
@@ -42,17 +42,17 @@ dev = [
     "nbsphinx", # Used to integrate Python notebooks into Sphinx documentation
     "ipython", # Also used in building notebooks into Sphinx
     "matplotlib", # Used in sample notebook intro_notebook.ipynb
-    "numpy", # Used in sample notebook intro_notebook.ipynb
     "ipykernel",
 ]
 train = [
-    "mlflow",
-    "azureml-mlflow",
-    "azureml-core",
     "jsonlines",
+    "mlflow",
 ]
-
-train_cuda = [
+azure = [
+    "azureml-core",
+    "azureml-mlflow",
+]
+cuda = [
     "bitsandbytes>=0.41.2.post2",
     "accelerate>=0.24.1",
     "xformers",
@@ -98,3 +98,6 @@ include = ["src/autora"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/autora"]
+
+[project.scripts]
+autodoc = "autora.doc.pipelines.main:app"
