@@ -2,8 +2,6 @@ import logging
 from timeit import default_timer as timer
 from typing import List
 
-import jsonlines
-import mlflow
 import torch
 import typer
 
@@ -20,6 +18,11 @@ logger = logging.getLogger(__name__)
 
 @app.command()
 def eval(data_file: str, model_path: str, sys_id: SystemPrompts, instruc_id: InstructionPrompts) -> List[str]:
+    import jsonlines
+    import mlflow
+
+    mlflow.autolog()
+
     run = mlflow.active_run()
 
     sys_prompt = SYS[sys_id]
@@ -82,5 +85,4 @@ def import_model(model_name: str) -> None:
 if __name__ == "__main__":
     logger.info(f"Torch version: {torch.__version__} , Cuda available: {torch.cuda.is_available()}")
 
-    mlflow.autolog()
     app()
