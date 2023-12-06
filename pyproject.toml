@@ -20,6 +20,7 @@ dependencies = [
     "scipy",
     # This works, while installing from pytorch and cuda from conda does not",
     "torch==2.0.1",
+    "transformers>=4.35.2",
 ]
 
 # On a mac, install optional dependencies with `pip install '.[dev]'` (include the single quotes)
@@ -52,7 +53,6 @@ azure = [
     "azureml-mlflow",
 ]
 cuda = [
-    "transformers>=4.35.2",
     "bitsandbytes>=0.41.2.post2",
     "accelerate>=0.24.1",
     "xformers",
