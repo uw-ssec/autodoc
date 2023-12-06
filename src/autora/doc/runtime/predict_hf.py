@@ -39,7 +39,7 @@ class Predictor:
             top_k=40,
             num_return_sequences=1,
             eos_token_id=self.tokenizer.eos_token_id,
-            max_length=1000,
+            max_length=2048,
         )
 
         results = [Predictor.trim_prompt(sequence[0]["generated_text"]) for sequence in sequences]

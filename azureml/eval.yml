@@ -1,6 +1,6 @@
 $schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
 command: >
-  python -m autora.doc.pipelines.main predict
+  python -m autora.doc.pipelines.main eval 
   ${{inputs.data_dir}}/data.jsonl
   ${{inputs.model_dir}}/llama-2-7b-chat-hf
   SYS_1

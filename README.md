@@ -78,7 +78,7 @@ az storage blob upload  --account-name <account> --container <container>> --file
 
 Prediction
 ```sh
-az ml job create -f azureml/predict.yml  --set display_name="Test prediction job" --web
+az ml job create -f azureml/eval.yml  --set display_name="Test prediction job" --web
 ```
 
 Notes:

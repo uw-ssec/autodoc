@@ -2,8 +2,6 @@ import logging
 from timeit import default_timer as timer
 from typing import List
 
-import jsonlines
-import mlflow
 import torch
 import typer
 
@@ -19,9 +17,12 @@ logger = logging.getLogger(__name__)
 
 
 @app.command()
-def predict(
-    data_file: str, model_path: str, sys_id: SystemPrompts, instruc_id: InstructionPrompts
-) -> List[str]:
+def eval(data_file: str, model_path: str, sys_id: SystemPrompts, instruc_id: InstructionPrompts) -> List[str]:
+    import jsonlines
+    import mlflow
+
+    mlflow.autolog()
+
     run = mlflow.active_run()
 
     sys_prompt = SYS[sys_id]
@@ -33,7 +34,6 @@ def predict(
         logger.info(f"running predict with {data_file}")
         logger.info(f"model path: {model_path}")
 
-        # predictions = []
         with jsonlines.open(data_file) as reader:
             items = [item for item in reader]
             inputs = [item["instruction"] for item in items]
@@ -58,6 +58,26 @@ def predict(
 
 
 @app.command()
+def generate(
+    python_file: str,
+    model_path: str = "meta-llama/llama-2-7b-chat-hf",
+    output: str = "output.txt",
+    sys_id: SystemPrompts = SystemPrompts.SYS_1,
+    instruc_id: InstructionPrompts = InstructionPrompts.INSTR_SWEETP_1,
+) -> None:
+    with open(python_file, "r") as f:
+        inputs = [f.read()]
+    sys_prompt = SYS[sys_id]
+    instr_prompt = INSTR[instruc_id]
+    pred = Predictor(model_path)
+    predictions = pred.predict(sys_prompt, instr_prompt, inputs)
+    assert len(predictions) == 1, f"Expected only one output, got {len(predictions)}"
+    logger.info(f"Writing output to {output}")
+    with open(output, "w") as f:
+        f.write(predictions[0])
+
+
+@app.command()
 def import_model(model_name: str) -> None:
     pass
 
@@ -65,5 +85,4 @@ def import_model(model_name: str) -> None:
 if __name__ == "__main__":
     logger.info(f"Torch version: {torch.__version__} , Cuda available: {torch.cuda.is_available()}")
 
-    mlflow.autolog()
     app()
