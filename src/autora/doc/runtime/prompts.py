@@ -24,11 +24,11 @@ INSTR_SWEETP_1 = """Please generate high-level two paragraph documentation for t
 paragraph should explain the purpose and the second one the procedure, but don't use the word 'Paragraph'"""
 
 
-class SystemPrompts(Enum):
+class SystemPrompts(str, Enum):
     SYS_1 = "SYS_1"
 
 
-class InstructionPrompts(Enum):
+class InstructionPrompts(str, Enum):
     INSTR_SWEETP_1 = "INSTR_SWEETP_1"
 
 

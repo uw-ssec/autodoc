@@ -19,9 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 @app.command()
-def predict(
-    data_file: str, model_path: str, sys_id: SystemPrompts, instruc_id: InstructionPrompts
-) -> List[str]:
+def eval(data_file: str, model_path: str, sys_id: SystemPrompts, instruc_id: InstructionPrompts) -> List[str]:
     run = mlflow.active_run()
 
     sys_prompt = SYS[sys_id]
@@ -33,7 +31,6 @@ def predict(
         logger.info(f"running predict with {data_file}")
         logger.info(f"model path: {model_path}")
 
-        # predictions = []
         with jsonlines.open(data_file) as reader:
             items = [item for item in reader]
             inputs = [item["instruction"] for item in items]
@@ -55,6 +52,26 @@ def predict(
         mlflow.log_metric("total_tokens", total_tokens)
         mlflow.log_metric("tokens/sec", total_tokens / pred_time)
         return predictions
+
+
+@app.command()
+def generate(
+    python_file: str,
+    model_path: str = "meta-llama/llama-2-7b-chat-hf",
+    output: str = "output.txt",
+    sys_id: SystemPrompts = SystemPrompts.SYS_1,
+    instruc_id: InstructionPrompts = InstructionPrompts.INSTR_SWEETP_1,
+) -> None:
+    with open(python_file, "r") as f:
+        inputs = [f.read()]
+    sys_prompt = SYS[sys_id]
+    instr_prompt = INSTR[instruc_id]
+    pred = Predictor(model_path)
+    predictions = pred.predict(sys_prompt, instr_prompt, inputs)
+    assert len(predictions) == 1, f"Expected only one output, got {len(predictions)}"
+    logger.info(f"Writing output to {output}")
+    with open(output, "w") as f:
+        f.write(predictions[0])
 
 
 @app.command()

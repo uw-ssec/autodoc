@@ -1,0 +1,18 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+command: >
+  python -m autora.doc.pipelines.main generate 
+  --model-path ${{inputs.model_dir}}/llama-2-7b-chat-hf
+  --output ./outputs/output.txt
+  autora/doc/pipelines/main.py    
+code: ../src
+inputs:
+  model_dir:
+    type: uri_folder 
+    path: azureml://datastores/workspaceblobstore/paths/base_models    
+environment: 
+  image: mcr.microsoft.com/azureml/curated/acpt-pytorch-2.0-cuda11.7:21
+  conda_file: conda.yml
+display_name: autodoc_prediction
+compute: azureml:v100cluster
+experiment_name: autodoc_prediction
+description: |
