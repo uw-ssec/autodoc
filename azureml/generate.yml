@@ -3,16 +3,26 @@ command: >
   python -m autora.doc.pipelines.main generate 
   --model-path ${{inputs.model_dir}}/llama-2-7b-chat-hf
   --output ./outputs/output.txt
+  --sys-id ${{inputs.sys_id}}
+  --instruc-id ${{inputs.instruc_id}}
+  --param temperature=${{inputs.temperature}}
+  --param top_k=${{inputs.top_k}}
+  --param top_p=${{inputs.top_p}}
   autora/doc/pipelines/main.py    
 code: ../src
 inputs:
   model_dir:
     type: uri_folder 
     path: azureml://datastores/workspaceblobstore/paths/base_models    
+  temperature: 0.7
+  top_p: 0.95
+  top_k: 40
+  sys_id: SYS_1
+  instruc_id: INSTR_SWEETP_1
 environment: 
   image: mcr.microsoft.com/azureml/curated/acpt-pytorch-2.0-cuda11.7:21
   conda_file: conda.yml
 display_name: autodoc_prediction
 compute: azureml:v100cluster
-experiment_name: autodoc_prediction
+experiment_name: prediction
 description: |
