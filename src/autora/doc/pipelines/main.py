@@ -1,3 +1,4 @@
+import itertools
 import logging
 from timeit import default_timer as timer
 from typing import List
@@ -64,7 +65,7 @@ def eval(
                 mlflow.log_text(predictions[i][j], f"prediction_{i}_{j}.txt")
 
         # flatten predictions for counting tokens
-        predictions_flat = [pred for pred_list in predictions for pred in pred_list]
+        predictions_flat = list(itertools.chain.from_iterable(predictions))
         tokens = pred.tokenize(predictions_flat)["input_ids"]
         total_tokens = sum([len(token) for token in tokens])
         mlflow.log_metric("total_tokens", total_tokens)
