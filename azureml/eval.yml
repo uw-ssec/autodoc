@@ -2,9 +2,12 @@ $schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
 command: >
   python -m autora.doc.pipelines.main eval 
   ${{inputs.data_dir}}/data.jsonl
-  ${{inputs.model_dir}}/llama-2-7b-chat-hf
-  SYS_1
-  INSTR_SWEETP_1
+  --model-path ${{inputs.model_dir}}/llama-2-7b-chat-hf
+  --sys-id ${{inputs.sys_id}}
+  --instruc-id ${{inputs.instruc_id}}
+  --param temperature=${{inputs.temperature}}
+  --param top_k=${{inputs.top_k}}
+  --param top_p=${{inputs.top_p}}
 code: ../src
 inputs:
   data_dir:
@@ -13,6 +16,11 @@ inputs:
   model_dir:
     type: uri_folder 
     path: azureml://datastores/workspaceblobstore/paths/base_models    
+  temperature: 0.7
+  top_p: 0.95
+  top_k: 40
+  sys_id: SYS_1
+  instruc_id: INSTR_SWEETP_1
 # using a curated environment doesn't work because we need additional packages
 environment: # azureml://registries/azureml/environments/acpt-pytorch-2.0-cuda11.7/versions/21
   image: mcr.microsoft.com/azureml/curated/acpt-pytorch-2.0-cuda11.7:21
@@ -25,6 +33,6 @@ environment: # azureml://registries/azureml/environments/acpt-pytorch-2.0-cuda11
   # image: nvcr.io/nvidia/pytorch:23.10-py3
   conda_file: conda.yml
 display_name: autodoc_prediction
-compute: azureml:v100cluster
-experiment_name: autodoc_prediction
+compute: azureml:t4cluster
+experiment_name: evaluation
 description: |

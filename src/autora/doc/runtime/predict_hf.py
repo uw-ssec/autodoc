@@ -27,22 +27,36 @@ class Predictor:
             tokenizer=self.tokenizer,
         )
 
-    def predict(self, sys: str, instr: str, inputs: List[str]) -> List[str]:
-        logger.info(f"Generating {len(inputs)} predictions")
+    def predict(
+        self,
+        sys: str,
+        instr: str,
+        inputs: List[str],
+        temperature: float = 0.6,
+        top_p: float = 0.95,
+        top_k: float = 40,
+        max_length: float = 2048,
+        num_ret_seq: float = 1,
+    ) -> List[List[str]]:
+        logger.info(
+            f"Generating {len(inputs)} predictions. Temperature: {temperature}, top_p: {top_p}, top_k: {top_k}, "
+            f"max_length: {max_length}"
+        )
         prompts = [TEMP_LLAMA2.format(sys=sys, instr=instr, input=input) for input in inputs]
-        # TODO: Make these parameters configurable
         sequences = self.pipeline(
             prompts,
             do_sample=True,
-            temperature=0.6,
-            top_p=0.95,
-            top_k=40,
-            num_return_sequences=1,
+            temperature=temperature,
+            top_p=top_p,
+            top_k=int(top_k),
+            num_return_sequences=int(num_ret_seq),
             eos_token_id=self.tokenizer.eos_token_id,
-            max_length=2048,
+            max_length=int(max_length),
         )
 
-        results = [Predictor.trim_prompt(sequence[0]["generated_text"]) for sequence in sequences]
+        results = [
+            [Predictor.trim_prompt(seq["generated_text"]) for seq in sequence] for sequence in sequences
+        ]
         logger.info(f"Generated {len(results)} results")
         return results
 
