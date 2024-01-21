@@ -10,7 +10,7 @@ from nltk.translate.bleu_score import SmoothingFunction, corpus_bleu
 from nltk.translate.meteor_score import single_meteor_score
 
 from autora.doc.runtime.predict_hf import Predictor
-from autora.doc.runtime.prompts import INSTR, SYS, InstructionPrompts, SystemPrompts
+from autora.doc.runtime.prompts import PROMPTS, PromptIds
 
 app = typer.Typer()
 logging.basicConfig(
@@ -51,10 +51,7 @@ def evaluate_documentation(predictions: List[List[str]], references: List[str]) 
 def eval(
     data_file: str = typer.Argument(..., help="JSONL Data file to evaluate on"),
     model_path: str = typer.Option("meta-llama/Llama-2-7b-chat-hf", help="Path to HF model"),
-    sys_id: SystemPrompts = typer.Option(SystemPrompts.SYS_1, help="System prompt ID"),
-    instruc_id: InstructionPrompts = typer.Option(
-        InstructionPrompts.INSTR_SWEETP_1, help="Instruction prompt ID"
-    ),
+    prompt_id: PromptIds = typer.Option(PromptIds.SWEETP_1, help="Instruction prompt ID"),
     param: List[str] = typer.Option(
         [], help="Additional float parameters to pass to the model as name=float pairs"
     ),
@@ -67,8 +64,7 @@ def eval(
     param_dict = {pair[0]: float(pair[1]) for pair in [pair.split("=") for pair in param]}
     run = mlflow.active_run()
 
-    sys_prompt = SYS[sys_id]
-    instr_prompt = INSTR[instruc_id]
+    prompt = PROMPTS[prompt_id]
     if run is None:
         run = mlflow.start_run()
     with run:
@@ -76,6 +72,9 @@ def eval(
         logger.info(f"running predict with {data_file}")
         logger.info(f"model path: {model_path}")
         mlflow.log_params(param_dict)
+        mlflow.log_param("prompt_id", prompt_id)
+        mlflow.log_param("model_path", model_path)
+        mlflow.log_param("data_file", data_file)
 
         with jsonlines.open(data_file) as reader:
             items = [item for item in reader]
@@ -84,10 +83,9 @@ def eval(
 
         pred = Predictor(model_path)
         timer_start = timer()
-        predictions = pred.predict(sys_prompt, instr_prompt, inputs, **param_dict)
-        bleu, meteor = evaluate_documentation(predictions, labels)
-
+        predictions = pred.predict(prompt, inputs, **param_dict)
         timer_end = timer()
+        bleu, meteor = evaluate_documentation(predictions, labels)
         pred_time = timer_end - timer_start
         mlflow.log_metric("prediction_time/doc", pred_time / (len(inputs)))
         for i in range(len(inputs)):
@@ -114,10 +112,7 @@ def generate(
     python_file: str = typer.Argument(..., help="Python file to generate documentation for"),
     model_path: str = typer.Option("meta-llama/Llama-2-7b-chat-hf", help="Path to HF model"),
     output: str = typer.Option("output.txt", help="Output file"),
-    sys_id: SystemPrompts = typer.Option(SystemPrompts.SYS_1, help="System prompt ID"),
-    instruc_id: InstructionPrompts = typer.Option(
-        InstructionPrompts.INSTR_SWEETP_1, help="Instruction prompt ID"
-    ),
+    prompt_id: PromptIds = typer.Option(PromptIds.SWEETP_1, help="Instruction prompt ID"),
     param: List[str] = typer.Option(
         [], help="Additional float parameters to pass to the model as name=float pairs"
     ),
@@ -128,11 +123,10 @@ def generate(
     """
     with open(python_file, "r") as f:
         input = f.read()
-    sys_prompt = SYS[sys_id]
-    instr_prompt = INSTR[instruc_id]
+    prompt = PROMPTS[prompt_id]
     pred = Predictor(model_path)
     # grab first result since we only passed one input
-    predictions = pred.predict(sys_prompt, instr_prompt, [input], **param_dict)[0]
+    predictions = pred.predict(prompt, [input], **param_dict)[0]
     assert len(predictions) == 1, f"Expected only one output, got {len(predictions)}"
     logger.info(f"Writing output to {output}")
     with open(output, "w") as f:
