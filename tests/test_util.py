@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from autora.doc.util import get_eval_result_from_prediction, get_prompts_from_file, load_file
+from autora.doc.util import get_prompts_from_file, load_file
 
 
 def test_load_file() -> None:
@@ -16,17 +16,3 @@ def test_get_prompts_from_file() -> None:
     assert len(prompts_list) == 3, "Expected 3 outputs"
     for prompt in prompts_list:
         assert type(prompt) == str
-
-
-def test_get_eval_result_from_prediction() -> None:
-    prediction = (["response1", "response2"], 0.8, 0.7)
-    prompt = "prompt1"
-    result = get_eval_result_from_prediction(prediction, prompt)
-    expected_result = {
-        "prediction": ["response1", "response2"],
-        "bleu": 0.8,
-        "meteor": 0.7,
-        "prompt": "prompt1",
-    }
-    assert type(result) == dict  # Assert result is a dictionary
-    assert result == expected_result  # Assert specific keys and values

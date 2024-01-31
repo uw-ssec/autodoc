@@ -9,9 +9,10 @@ import typer
 from nltk.translate.bleu_score import SmoothingFunction, corpus_bleu
 from nltk.translate.meteor_score import single_meteor_score
 
+from autora.doc.classes.EvalResult import EvalResult
 from autora.doc.runtime.predict_hf import Predictor
-from autora.doc.runtime.prompts import PROMPTS, PromptBuilder, PromptIds
-from autora.doc.util import get_eval_result_from_prediction, get_prompts_from_file, load_file
+from autora.doc.runtime.prompts import PROMPTS, PromptIds
+from autora.doc.util import get_prompts_from_file
 
 app = typer.Typer()
 logging.basicConfig(
@@ -56,7 +57,7 @@ def eval_prompts(
     param: List[str] = typer.Option(
         [], help="Additional float parameters to pass to the model as name=float pairs"
     ),
-) -> List[Dict[str, str]]:
+) -> List[EvalResult]:
     import mlflow
 
     results_list = []
@@ -82,7 +83,12 @@ def eval_prompts(
             logger.info(f"Starting to run model on prompt {i}")
             prediction_with_scores = eval_prompt(data_file, predictor, prompts_list[i], param_dict)
             logger.info(f"Model run completed on prompt {i}: {prompts_list[i]}")
-            eval_result = get_eval_result_from_prediction(prediction_with_scores, prompts_list[i])
+            eval_result = EvalResult(
+                prediction_with_scores[0],
+                prompts_list[i],
+                prediction_with_scores[1],
+                prediction_with_scores[2],
+            )
             results_list.append(eval_result)
         return results_list
 

@@ -4,6 +4,7 @@ from typing import Dict, List
 import jsonlines
 import pytest
 
+from autora.doc.classes.EvalResult import EvalResult
 from autora.doc.pipelines.main import eval, eval_prompts, evaluate_documentation, generate, import_data
 from autora.doc.runtime.prompts import PromptIds
 
@@ -90,7 +91,8 @@ def test_import(tmp_path: Path) -> None:
 def test_eval_prompts() -> None:
     data_file = Path(__file__).parent.joinpath("../data/sweetpea/data.jsonl").resolve()
     prompts_file = Path(__file__).parent.joinpath("../data/autora/prompts/all_prompt.json").resolve()
-    outputs: List[Dict[str, str]] = eval_prompts(str(data_file), TEST_HF_MODEL, str(prompts_file), [])
-    assert len(outputs) == 3, "Expected 3 outputs"
-    for output in outputs:
-        assert len(output) > 0, "Expected non-empty output"
+    results: List[EvalResult] = eval_prompts(str(data_file), TEST_HF_MODEL, str(prompts_file), [])
+    assert len(results) == 3, "Expected 3 outputs"
+    for result in results:
+        assert result.prediction is not None, "The prediction should not be None"
+        assert result.prompt is not None, "The prompt should not be None"
