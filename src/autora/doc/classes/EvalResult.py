@@ -8,5 +8,5 @@ class EvalResult:
 
     prediction: List[str]
     prompt: str
-    bleu_score: Optional[float]
-    meteor_score: Optional[float]
+    bleu_score: Optional[float] = None
+    meteor_score: Optional[float] = None
