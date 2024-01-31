@@ -1,9 +1,10 @@
 from pathlib import Path
+from typing import Dict, List
 
 import jsonlines
 import pytest
 
-from autora.doc.pipelines.main import eval, evaluate_documentation, generate, import_data
+from autora.doc.pipelines.main import eval, eval_prompts, evaluate_documentation, generate, import_data
 from autora.doc.runtime.prompts import PromptIds
 
 # dummy HF model for testing
@@ -84,3 +85,12 @@ def test_import(tmp_path: Path) -> None:
     import_data(str(code), str(text), str(data))
     new_lines = data.read_text().splitlines()
     assert len(new_lines) == 1, "Expected one new line"
+
+
+def test_eval_prompts() -> None:
+    data_file = Path(__file__).parent.joinpath("../data/sweetpea/data.jsonl").resolve()
+    prompts_file = Path(__file__).parent.joinpath("../data/autora/prompts/all_prompt.json").resolve()
+    outputs: List[Dict[str, str]] = eval_prompts(str(data_file), TEST_HF_MODEL, str(prompts_file), [])
+    assert len(outputs) == 3, "Expected 3 outputs"
+    for output in outputs:
+        assert len(output) > 0, "Expected non-empty output"
