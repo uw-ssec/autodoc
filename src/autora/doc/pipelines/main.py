@@ -49,7 +49,7 @@ def evaluate_documentation(predictions: List[str], references: List[str]) -> Tup
 
 
 @app.command(help="Evaluate a model for code-to-documentation generation for all prompts in the prompts_file")
-def eval_on_prompts_file(
+def eval_prompts(
     data_file: str = typer.Argument(..., help="JSONL Data file to evaluate on"),
     model_path: str = typer.Option("meta-llama/Llama-2-7b-chat-hf", help="Path to HF model"),
     prompts_file: str = typer.Argument(..., help="JSON file with a list of dictionary of prompts"),
@@ -76,9 +76,10 @@ def eval_on_prompts_file(
         mlflow.log_params(param_dict)
         mlflow.log_param("model_path", model_path)
         mlflow.log_param("data_file", data_file)
+        mlflow.log_param("prompts_file", prompts_file)
         predictor = Predictor(model_path)
         for i in range(len(prompts_list)):
-            logger.info(f"Starting to run model on prompt {i}: {prompts_list[i]}")
+            logger.info(f"Starting to run model on prompt {i}")
             prediction_with_scores = eval_prompt(data_file, predictor, prompts_list[i], param_dict)
             logger.info(f"Model run completed on prompt {i}: {prompts_list[i]}")
             eval_result = get_eval_result_from_prediction(prediction_with_scores, prompts_list[i])
